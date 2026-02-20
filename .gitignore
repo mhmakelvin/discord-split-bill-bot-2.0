@@ -1,0 +1,5 @@
+.env
+node_modules
+
+# Postgres local data directory
+src/db/db
