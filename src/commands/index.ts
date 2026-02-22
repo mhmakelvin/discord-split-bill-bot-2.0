@@ -1,10 +1,9 @@
-import { SlashCommandBuilder, CommandInteraction } from "discord.js";
+import * as ping from "./ping.js";
+import * as activate from "./activate.js";
+
+export const commands: CommandModule[] = [ping, activate];
 
 export interface CommandModule {
-  data: SlashCommandBuilder;
-  execute: (interaction: CommandInteraction) => Promise<void>;
+  data: any;
+  execute: (interaction: any) => Promise<void>;
 }
-
-import * as ping from "./ping.js";
-
-export const commands: CommandModule[] = [ping];
