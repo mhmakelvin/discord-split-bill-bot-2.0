@@ -9,7 +9,5 @@ export async function execute(interaction: CommandInteraction) {
   await interaction.reply({
     content: "Discord Split Bill Bot is online!",
     ephemeral: true,
-});
+  });
 }
-
-
