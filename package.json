@@ -9,6 +9,7 @@
     "db:generate": "npx drizzle-kit generate",
     "db:migrate": "npx drizzle-kit migrate",
     "db:push": "npx drizzle-kit push",
+    "db:reset": "npx tsx -r dotenv/config src/db/resetDatabase.ts && npm run db:push",
     "format": "npx prettier --write . '!src/db/db'",
     "start:backend": "npx tsx -r dotenv/config src/app.ts",
     "start": "npm run command:deploy && npm run start:backend"
