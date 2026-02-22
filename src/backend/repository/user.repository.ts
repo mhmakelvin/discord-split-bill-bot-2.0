@@ -5,7 +5,7 @@ import type {
 import { db } from "@db";
 import { users } from "@db/schema.js";
 import { and, eq, sql } from "drizzle-orm";
-import type { Currency } from "../interface/userBalance.repository.interface.js";
+import type { Currency } from "../interface/user-balance.repository.interface.js";
 import { userBalances } from "@db/schema.js";
 import type { DbType } from "@db/index.js";
 

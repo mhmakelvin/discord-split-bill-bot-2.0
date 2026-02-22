@@ -1,5 +1,5 @@
 import type { User } from "./user.repository.interface.js";
-import type { Currency } from "./userBalance.repository.interface.js";
+import type { Currency } from "./user-balance.repository.interface.js";
 
 export type TransactionStatus =
   | "pending"

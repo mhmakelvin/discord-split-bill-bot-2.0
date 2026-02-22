@@ -1,4 +1,4 @@
-import type { Currency } from "../interface/userBalance.repository.interface.js";
+import type { Currency } from "../interface/user-balance.repository.interface.js";
 import { UserRepository } from "../repository/user.repository.js";
 
 export class UserService {
