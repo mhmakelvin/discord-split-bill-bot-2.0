@@ -15,7 +15,7 @@ export function createSplitBillTransactionMessageEmbed(params: {
   currency: Currency;
   messageId: string;
 }) {
-  const { description, author, payer, payees, amount, currency, messageId } =
+  const { description, payer, payees, amount, currency, messageId } =
     params;
 
   const payeeAmount = amount / payees.length;
@@ -37,7 +37,6 @@ export function createSplitBillTransactionMessageEmbed(params: {
   };
 
   upsertEmbedFields(embed, "Transaction ID", messageId);
-  upsertEmbedFields(embed, "", payer.name);
   upsertEmbedFields(embed, "Payer", payer.name);
   upsertEmbedFields(
     embed,
