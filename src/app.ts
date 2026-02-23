@@ -1,5 +1,6 @@
 import * as Discord from "discord.js";
-import { commands, type CommandModule } from "./commands/index.js";
+import * as commands from "./commands/index.js";
+import type { CommandModule } from "./commands/index.js";
 
 const client = new Discord.Client({
   intents: [
@@ -18,11 +19,9 @@ client.once(Discord.Events.ClientReady, (c) => {
   console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
-const clientCommands = new Discord.Collection<string, CommandModule>();
-
-for (const command of commands) {
-  clientCommands.set(command.data.name, command);
-}
+const clientCommands = new Discord.Collection(
+  Object.values(commands).map((cmd) => [cmd.data.name, cmd as CommandModule]),
+);
 
 client.on(Discord.Events.InteractionCreate, async (interaction) => {
   // We only care about Slash Commands (Chat Input)

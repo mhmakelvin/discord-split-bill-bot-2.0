@@ -1,7 +1,10 @@
 import { REST, Routes } from "discord.js";
-import { commands } from "./commands/index.js";
+import * as commands from "./commands/index.js";
+import type { CommandModule } from "./commands/index.js";
 
-const body = commands.map((c) => c.data.toJSON());
+const body = (Object.values(commands) as CommandModule[]).map((c) =>
+  c.data.toJSON(),
+);
 
 const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN!);
 

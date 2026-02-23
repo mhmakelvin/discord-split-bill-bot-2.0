@@ -1,8 +1,5 @@
-import * as ping from "./ping.js";
-import * as activate from "./activate.js";
-
-export const commands: CommandModule[] = [ping, activate];
-
+export * as ping from "./ping.js";
+export * as activate from "./activate.js";
 export interface CommandModule {
   data: any;
   execute: (interaction: any) => Promise<void>;
