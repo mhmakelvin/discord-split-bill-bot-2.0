@@ -204,7 +204,11 @@ export class TransactionService {
     });
   }
 
-  async cancelTransaction(messageId: string) {
+  async cancelTransaction(
+    messageId: string,
+    userId: string,
+    serverId: string,
+  ): Promise<{ channelId: string; messageId: string }[]> {
     const transactions =
       await this.transactionRepository.findTransactionsByMessageId({
         messageId,
@@ -223,6 +227,16 @@ export class TransactionService {
       );
     }
 
+    if (
+      transactions.some(
+        (transaction) =>
+          transaction.author.userId !== userId ||
+          transaction.author.serverId !== serverId,
+      )
+    ) {
+      throw new Error(`You are not the author of transaction ${messageId}`);
+    }
+
     await db.transaction(async (tx) => {
       for (const transaction of transactions) {
         await this.transactionRepository.update({
@@ -234,5 +248,10 @@ export class TransactionService {
         });
       }
     });
+
+    return transactions.map((transaction) => ({
+      channelId: transaction.channelId,
+      messageId: transaction.messageId,
+    }));
   }
 }
