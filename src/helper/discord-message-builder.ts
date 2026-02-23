@@ -143,6 +143,32 @@ export function updateApprovedUsersInEmbed(
   message.edit({ embeds: [embed.data] });
 }
 
+export function updateTransactionMessageForCancellation(
+  message: Discord.Message,
+  userId: string,
+) {
+  message.edit({
+    content: `This transaction has been cancelled by ${buildMentionableUsersFromIds([userId])} on ${new Date().toUTCString()}`,
+  });
+  message.unpin();
+}
+
+export function updateTransactionMessageAfterProcessed(
+  message: Discord.Message,
+) {
+  const embed = message.embeds[0];
+  if (!embed) return;
+
+  upsertEmbedFields(embed.data, "Status", `Processed`);
+  upsertEmbedFields(embed.data, "Last Updated", new Date().toUTCString());
+
+  message.edit({ embeds: [embed.data] });
+  message.edit({
+    content: `This transaction has been processed on ${new Date().toUTCString()}`,
+  });
+  message.unpin();
+}
+
 export function upsertEmbedFields(
   embed: Discord.APIEmbed,
   name: string,

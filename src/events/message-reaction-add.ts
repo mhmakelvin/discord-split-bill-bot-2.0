@@ -3,7 +3,10 @@ import type { DiscordEvent } from "./index.js";
 import { TransactionService } from "../backend/service/transaction.service.js";
 import type { User } from "../backend/interface/user.repository.interface.js";
 import { approvedEmoji } from "../backend/constants.js";
-import { updateApprovedUsersInEmbed } from "../helper/discord-message-builder.js";
+import {
+  updateApprovedUsersInEmbed,
+  updateTransactionMessageAfterProcessed,
+} from "../helper/discord-message-builder.js";
 
 const transactionService = new TransactionService();
 
@@ -53,8 +56,8 @@ export const messageReactionAdd: DiscordEvent = {
     if (pendingUsers.length === 0) {
       try {
         await transactionService.approveTransaction(message.id);
-        message.unpin();
         await transactionService.processTransaction(message.id);
+        updateTransactionMessageAfterProcessed(message);
       } catch (error) {
         console.error(
           `Error when processing transaction ${message.id}:`,
