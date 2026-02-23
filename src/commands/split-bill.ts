@@ -156,7 +156,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
     const embed = createSplitBillTransactionMessageEmbed({
       description: description ?? `Split bill of ${amount} ${currency}`,
-      author: authorUser,
       payer: payerUser,
       payees,
       amount: roundedAmount,
