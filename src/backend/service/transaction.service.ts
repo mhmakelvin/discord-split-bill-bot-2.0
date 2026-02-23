@@ -1,4 +1,4 @@
-import { assert } from "node:console";
+import assert from "node:assert";
 import { db } from "../../db/index.js";
 import type { Currency } from "../interface/user-balance.repository.interface.js";
 import { TransactionRepository } from "../repository/transaction.repository.js";

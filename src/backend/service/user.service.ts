@@ -38,6 +38,14 @@ export class UserService {
     });
   }
 
+  async findUsersByServerAndUserIdList(
+    list: { serverId: string; userId: string }[],
+  ) {
+    return await this.userRepository.findUsersByServerAndUserIdList({
+      list,
+    });
+  }
+
   async updateBalance(
     serverId: string,
     userId: string,
