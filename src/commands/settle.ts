@@ -103,9 +103,18 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     return;
   }
 
-  const transactionMessage = await interaction.followUp({
-    content: `Creating Transaction`,
+  const resp = await interaction.reply({
+    content: `Creating Transaction...`,
+    withResponse: true,
   });
+
+  const transactionMessage = resp.resource?.message;
+  if (!transactionMessage) {
+    await interaction.editReply({
+      content: "Failed to create transaction. Please try again.",
+    });
+    return;
+  }
 
   try {
     const description = `${payerUser.name} pays back ${recipientUser.name} ${amount} ${currency}`;
@@ -137,8 +146,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     });
     transactionMessage.react(approvedEmoji);
     transactionMessage.pin();
-
-    interaction.deleteReply();
   } catch (error) {
     console.error("Error creating transaction:", error);
 
