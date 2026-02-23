@@ -9,6 +9,7 @@ import { UserService } from "../backend/service/user.service.js";
 import { TransactionService } from "../backend/service/transaction.service.js";
 import type { Currency } from "../backend/interface/user-balance.repository.interface.js";
 import { approvedEmoji } from "../backend/constants.js";
+import { buildMentionableUsersFromIds } from "../helper/discord-message-builder.js";
 
 const userService = new UserService();
 const transactionService = new TransactionService();
@@ -126,7 +127,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         (userId) => !payees.some((payee) => payee.userId === userId),
       );
       await interaction.editReply({
-        content: `${missingUserIds.map((id) => `<@${id}>`).join(", ")} must activate before using the bot in this server.`,
+        content: `${buildMentionableUsersFromIds(missingUserIds)} must activate before using the bot in this server.`,
         components: [],
       });
       return;
@@ -150,12 +151,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       messageId: transactionMessage.id,
     });
 
-    const participantMentions = payees
-      .map((payee) => `<@${payee.userId}>`)
-      .join(", ");
-
     transactionMessage.edit({
-      content: `${author} has initiated a transaction of ${amount} ${currency} splitting between ${participantMentions}\n Please confirm by reacting with ${approvedEmoji}`,
+      content: `${author} has initiated a transaction of ${amount} ${currency} splitting between ${buildMentionableUsersFromIds(participants)}\n Please confirm by reacting with ${approvedEmoji}`,
     });
     transactionMessage.react(approvedEmoji);
     transactionMessage.pin();
