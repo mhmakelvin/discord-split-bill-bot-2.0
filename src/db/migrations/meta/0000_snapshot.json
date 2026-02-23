@@ -27,12 +27,8 @@
           "name": "transactionPayees_transactionId_transactions_id_fk",
           "tableFrom": "transactionPayees",
           "tableTo": "transactions",
-          "columnsFrom": [
-            "transactionId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["transactionId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -40,12 +36,8 @@
           "name": "transactionPayees_payeeUserId_users_id_fk",
           "tableFrom": "transactionPayees",
           "tableTo": "users",
-          "columnsFrom": [
-            "payeeUserId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["payeeUserId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -53,10 +45,7 @@
       "compositePrimaryKeys": {
         "transactionPayees_transactionId_payeeUserId_pk": {
           "name": "transactionPayees_transactionId_payeeUserId_pk",
-          "columns": [
-            "transactionId",
-            "payeeUserId"
-          ]
+          "columns": ["transactionId", "payeeUserId"]
         }
       },
       "uniqueConstraints": {},
@@ -145,12 +134,8 @@
           "name": "transactions_authorUserId_users_id_fk",
           "tableFrom": "transactions",
           "tableTo": "users",
-          "columnsFrom": [
-            "authorUserId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["authorUserId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -158,12 +143,8 @@
           "name": "transactions_payerUserId_users_id_fk",
           "tableFrom": "transactions",
           "tableTo": "users",
-          "columnsFrom": [
-            "payerUserId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["payerUserId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -211,12 +192,8 @@
           "name": "userBalances_userId_users_id_fk",
           "tableFrom": "userBalances",
           "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -226,10 +203,7 @@
         "userBalances_userId_currency_unique": {
           "name": "userBalances_userId_currency_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "userId",
-            "currency"
-          ]
+          "columns": ["userId", "currency"]
         }
       },
       "policies": {},
@@ -307,21 +281,12 @@
     "public.currency": {
       "name": "currency",
       "schema": "public",
-      "values": [
-        "USD",
-        "JPY",
-        "HKD"
-      ]
+      "values": ["USD", "JPY", "HKD"]
     },
     "public.transaction_status": {
       "name": "transaction_status",
       "schema": "public",
-      "values": [
-        "pending",
-        "approved",
-        "cancelled",
-        "processed"
-      ]
+      "values": ["pending", "approved", "cancelled", "processed"]
     }
   },
   "schemas": {},
