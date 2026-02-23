@@ -13,17 +13,35 @@ export class TransactionService {
     this.transactionRepository = new TransactionRepository();
   }
 
-  async createTransaction(
-    author: { serverId: string; userId: string },
-    payer: { serverId: string; userId: string },
-    payees: { serverId: string; userId: string }[],
-    amount: number,
-    currency: Currency,
-    description: string,
-    serverId: string,
-    channelId: string,
-    messageId: string,
-  ) {
+  async findTransactionsByMessageId(messageId: string) {
+    return await this.transactionRepository.findTransactionsByMessageId({
+      messageId,
+    });
+  }
+
+  async createTransaction(params: {
+    author: { serverId: string; userId: string };
+    payer: { serverId: string; userId: string };
+    payees: { serverId: string; userId: string }[];
+    amount: number;
+    currency: Currency;
+    description: string;
+    serverId: string;
+    channelId: string;
+    messageId: string;
+  }) {
+    const {
+      author,
+      payer,
+      payees,
+      amount,
+      currency,
+      description,
+      serverId,
+      channelId,
+      messageId,
+    } = params;
+
     assert(amount > 0, "Amount must be greater than 0");
     assert(payees.length > 0, "At least one payee must be specified");
 
