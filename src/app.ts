@@ -15,10 +15,6 @@ const client = new Discord.Client({
   ],
 });
 
-client.once(Discord.Events.ClientReady, (c) => {
-  console.log(`Ready! Logged in as ${c.user.tag}`);
-});
-
 const clientCommands = new Discord.Collection(
   Object.values(commands).map((cmd) => [cmd.data.name, cmd as CommandModule]),
 );
