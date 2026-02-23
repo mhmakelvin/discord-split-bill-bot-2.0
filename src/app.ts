@@ -1,6 +1,8 @@
 import * as Discord from "discord.js";
 import { commands } from "./commands/index.js";
+import { events } from "./events/index.js";
 import type { CommandModule } from "./commands/index.js";
+import type { DiscordEvent } from "./events/index.js";
 
 const client = new Discord.Client({
   intents: [
@@ -20,10 +22,8 @@ const clientCommands = new Discord.Collection(
 );
 
 client.on(Discord.Events.InteractionCreate, async (interaction) => {
-  // We only care about Slash Commands (Chat Input)
   if (!interaction.isChatInputCommand()) return;
 
-  // Look up the command in our Collection by name
   const command = clientCommands.get(interaction.commandName);
 
   if (!command) {
@@ -32,23 +32,20 @@ client.on(Discord.Events.InteractionCreate, async (interaction) => {
   }
 
   try {
-    // Execute the command logic!
     await command.execute(interaction);
   } catch (error) {
     console.error(error);
 
-    // Always try to tell the user if something crashed
-    const errorMessage = {
-      content: "There was an error while executing this command!",
+    await interaction.reply({
+      content:
+        "There was an error while executing this command. Please contact administrator.",
       ephemeral: true,
-    };
-
-    if (interaction.replied || interaction.deferred) {
-      await interaction.followUp(errorMessage);
-    } else {
-      await interaction.reply(errorMessage);
-    }
+    });
   }
+});
+
+events.forEach((event: DiscordEvent) => {
+  client.on(event.action, (...args) => event.execute(...args));
 });
 
 client.login(process.env.DISCORD_BOT_TOKEN);
