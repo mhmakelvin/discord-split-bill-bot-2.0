@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import * as commands from "./commands/index.js";
+import { commands } from "./commands/index.js";
 import type { CommandModule } from "./commands/index.js";
 
 const client = new Discord.Client({
@@ -16,7 +16,7 @@ const client = new Discord.Client({
 });
 
 const clientCommands = new Discord.Collection(
-  Object.values(commands).map((cmd) => [cmd.data.name, cmd as CommandModule]),
+  commands.map((cmd) => [cmd.data.name, cmd as CommandModule]),
 );
 
 client.on(Discord.Events.InteractionCreate, async (interaction) => {
