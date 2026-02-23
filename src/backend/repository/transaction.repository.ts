@@ -7,6 +7,13 @@ import type {
 import { transactionPayees, transactions } from "@db/schema.js";
 import type { DbType } from "@db/index.js";
 
+function simplifyTransactionObject(transaction: any): Transaction {
+  return {
+    ...transaction,
+    payees: transaction.payees.map((p: any) => p.user),
+  };
+}
+
 export class TransactionRepository {
   private db: DbType = db;
 
@@ -21,7 +28,7 @@ export class TransactionRepository {
       .insert(transactions)
       .values(params)
       .returning();
-    return transaction;
+    return simplifyTransactionObject(transaction);
   }
 
   async update({
@@ -40,7 +47,7 @@ export class TransactionRepository {
       .returning();
 
     if (!transaction) throw new Error(`Transaction with id ${id} not found`);
-    return transaction;
+    return simplifyTransactionObject(transaction);
   }
 
   async findTransactionsByMessageId({
@@ -50,7 +57,7 @@ export class TransactionRepository {
     tx?: DbType;
     messageId: string;
   }): Promise<Transaction[]> {
-    return await tx.query.transactions.findMany({
+    const result = await tx.query.transactions.findMany({
       where: eq(transactions.messageId, messageId),
       with: {
         author: true,
@@ -62,6 +69,8 @@ export class TransactionRepository {
         },
       },
     });
+
+    return result?.map(simplifyTransactionObject);
   }
 
   async createTransactionPayeeRelations({
