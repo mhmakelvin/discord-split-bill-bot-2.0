@@ -10,7 +10,7 @@ import type { DbType } from "@db/index.js";
 function simplifyTransactionObject(transaction: any): Transaction {
   return {
     ...transaction,
-    payees: transaction.payees.map((p: any) => p.user),
+    payees: transaction.payees?.map((p: any) => p.user) ?? [],
   };
 }
 
