@@ -116,7 +116,6 @@ export function updateApprovedUsersInEmbed(
   pendingUsers: User[],
 ) {
   const embed = message.embeds[0];
-  console.log(embed);
   if (!embed) return;
 
   upsertEmbedFields(
