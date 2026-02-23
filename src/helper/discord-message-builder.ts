@@ -168,6 +168,23 @@ export function updateTransactionMessageAfterProcessed(
   message.unpin();
 }
 
+export function createUserProfileEmbed(user: User) {
+  const embed: Discord.APIEmbed = {
+    title: `${user.name}'s Profile`,
+    timestamp: new Date().toISOString(),
+  };
+
+  upsertEmbedFields(embed, "Discord ID", user.userId);
+  upsertEmbedFields(embed, "Display Name", user.name);
+  upsertEmbedFields(
+    embed,
+    "Balance",
+    user.balances.map((b) => `${b.currency}: ${b.balance}`).join("\n"),
+  );
+
+  return embed;
+}
+
 export function upsertEmbedFields(
   embed: Discord.APIEmbed,
   name: string,
