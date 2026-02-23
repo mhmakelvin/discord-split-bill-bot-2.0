@@ -1,23 +1,66 @@
-import { Events, MessageReaction, User } from "discord.js";
-import type { PartialMessageReaction, PartialUser } from "discord.js";
+import * as Discord from "discord.js";
 import type { DiscordEvent } from "./index.js";
 import { TransactionService } from "../backend/service/transaction.service.js";
+import type { User } from "../backend/interface/user.repository.interface.js";
+import { approvedEmoji } from "../backend/constants.js";
+import { updateApprovedUsersInEmbed } from "../helper/discord-message-builder.js";
 
 const transactionService = new TransactionService();
 
 export const messageReactionAdd: DiscordEvent = {
-  action: Events.MessageReactionAdd,
+  action: Discord.Events.MessageReactionAdd,
   async execute(
-    reaction: MessageReaction | PartialMessageReaction,
-    user: User | PartialUser,
+    reaction: Discord.MessageReaction | Discord.PartialMessageReaction,
+    user: Discord.User | Discord.PartialUser,
   ) {
-    if (reaction.partial) {
-      await reaction.fetch();
-    }
+    if (reaction.emoji.name !== approvedEmoji) return;
+    if (user.bot) return;
+
+    if (reaction.partial) await reaction.fetch();
+
+    const message = reaction.message.partial
+      ? await reaction.message.fetch()
+      : reaction.message;
 
     const transactions = await transactionService.findTransactionsByMessageId(
-      reaction.message.id,
+      message.id,
     );
-    console.log(transactions);
+
+    if (transactions.some((tx) => tx.status !== "pending")) return;
+
+    const requiredApprovers = Array.from(
+      transactions
+        .flatMap((tx) => [tx.payer, ...tx.payees])
+        .reduce((map, user) => {
+          if (!map.has(user.userId)) {
+            map.set(user.userId, user);
+          }
+          return map;
+        }, new Map<string, User>())
+        .values(),
+    );
+
+    const reactedUsers = await reaction.users.fetch();
+
+    const approvedUsers = requiredApprovers.filter((u) =>
+      reactedUsers.some((r) => r.id === u.userId),
+    );
+    const pendingUsers = requiredApprovers.filter(
+      (a) => !reactedUsers.some((u) => u.id === a.userId),
+    );
+
+    updateApprovedUsersInEmbed(message, approvedUsers, pendingUsers);
+    if (pendingUsers.length === 0) {
+      try {
+        await transactionService.approveTransaction(message.id);
+        message.unpin();
+        await transactionService.processTransaction(message.id);
+      } catch (error) {
+        console.error(
+          `Error when processing transaction ${message.id}:`,
+          error,
+        );
+      }
+    }
   },
 };

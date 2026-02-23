@@ -9,7 +9,10 @@ import { UserService } from "../backend/service/user.service.js";
 import { TransactionService } from "../backend/service/transaction.service.js";
 import type { Currency } from "../backend/interface/user-balance.repository.interface.js";
 import { approvedEmoji } from "../backend/constants.js";
-import { buildMentionableUsersFromIds } from "../helper/discord-message-builder.js";
+import {
+  buildMentionableUsersFromIds,
+  createSplitBillTransactionMessageEmbed,
+} from "../helper/discord-message-builder.js";
 
 const userService = new UserService();
 const transactionService = new TransactionService();
@@ -151,8 +154,19 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       messageId: transactionMessage.id,
     });
 
+    const embed = createSplitBillTransactionMessageEmbed({
+      description: description ?? `Split bill of ${amount} ${currency}`,
+      author: authorUser,
+      payer: payerUser,
+      payees,
+      amount: roundedAmount,
+      currency: currency as Currency,
+      messageId: transactionMessage.id,
+    });
+
     transactionMessage.edit({
       content: `${author} has initiated a transaction of ${amount} ${currency} splitting between ${buildMentionableUsersFromIds(participants)}\n Please confirm by reacting with ${approvedEmoji}`,
+      embeds: [embed],
     });
     transactionMessage.react(approvedEmoji);
     transactionMessage.pin();
