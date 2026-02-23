@@ -3,6 +3,7 @@ import * as activate from "./activate.js";
 import * as splitBill from "./split-bill.js";
 import * as cancel from "./cancel.js";
 import * as profile from "./profile.js";
+import * as settle from "./settle.js";
 
 export interface CommandModule {
   data: any;
@@ -15,4 +16,5 @@ export const commands: CommandModule[] = [
   splitBill,
   cancel,
   profile,
+  settle,
 ];

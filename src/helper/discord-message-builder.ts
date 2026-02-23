@@ -8,15 +8,13 @@ export function buildMentionableUsersFromIds(userIds: string[]): string {
 
 export function createSplitBillTransactionMessageEmbed(params: {
   description?: string;
-  author: User;
   payer: User;
   payees: User[];
   amount: number;
   currency: Currency;
   messageId: string;
 }) {
-  const { description, payer, payees, amount, currency, messageId } =
-    params;
+  const { description, payer, payees, amount, currency, messageId } = params;
 
   const payeeAmount = amount / payees.length;
 
@@ -66,15 +64,15 @@ export function createSplitBillTransactionMessageEmbed(params: {
 export function createSettlementMessageEmbed(params: {
   description?: string;
   payer: User;
-  payee: User;
+  recipient: User;
   amount: number;
   currency: Currency;
   messageId: string;
 }) {
-  const { description, payer, payee, amount, currency, messageId } = params;
+  const { description, payer, recipient, amount, currency, messageId } = params;
 
   const requiredApprovers = Array.from(
-    [payer, payee]
+    [payer, recipient]
       .reduce((map, user) => {
         if (!map.has(user.userId)) {
           map.set(user.userId, user);
@@ -90,9 +88,8 @@ export function createSettlementMessageEmbed(params: {
   };
 
   upsertEmbedFields(embed, "Transaction ID", messageId);
-  upsertEmbedFields(embed, "", payer.name);
   upsertEmbedFields(embed, "Payer", payer.name);
-  upsertEmbedFields(embed, "Payee", payee.name);
+  upsertEmbedFields(embed, "Recipient", recipient.name);
   upsertEmbedFields(embed, "Amount", `${amount} ${currency}`);
   upsertEmbedFields(embed, "Approved", `0`);
   upsertEmbedFields(
