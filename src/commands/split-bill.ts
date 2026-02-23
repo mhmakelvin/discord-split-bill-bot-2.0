@@ -59,7 +59,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
   const authorUser = await userService.findUserByServerAndUserId(
     serverId!,
-    payer.id,
+    author.id,
   );
 
   if (!authorUser || authorUser.isActive === false) {
