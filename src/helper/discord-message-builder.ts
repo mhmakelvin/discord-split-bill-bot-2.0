@@ -130,9 +130,11 @@ export function updateApprovedUsersInEmbed(
         ? ` (${pendingUsers.map((user) => user.name).join(", ")})`
         : ""),
   );
-  if (pendingUsers.length === 0) {
-    upsertEmbedFields(embed.data, "Status", `Approved`);
-  }
+  upsertEmbedFields(
+    embed.data,
+    "Status",
+    pendingUsers.length === 0 ? "Approved" : "Pending",
+  );
   upsertEmbedFields(embed.data, "Last Updated", new Date().toUTCString());
 
   message.edit({ embeds: [embed.data] });
