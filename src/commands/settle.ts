@@ -140,7 +140,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       messageId: transactionMessage.id,
     });
 
-    transactionMessage.edit({
+    await transactionMessage.edit({
       content: `${author} has initiated a transaction of ${amount} ${currency} from ${payer} to ${recipient}\n Please confirm by reacting with ${approvedEmoji}`,
       embeds: [embed],
     });

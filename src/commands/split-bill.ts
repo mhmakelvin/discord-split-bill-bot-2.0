@@ -163,7 +163,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       messageId: transactionMessage.id,
     });
 
-    transactionMessage.edit({
+    await transactionMessage.edit({
       content: `${author} has initiated a transaction of ${amount} ${currency} splitting between ${buildMentionableUsersFromIds(participants)}\n Please confirm by reacting with ${approvedEmoji}`,
       embeds: [embed],
     });
