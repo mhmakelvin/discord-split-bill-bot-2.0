@@ -19,7 +19,7 @@ export interface Transaction {
   serverId: string;
   channelId: string;
   messageId: string;
-  createAt: Date;
+  createdAt: Date;
 }
 
 export interface CreateTransactionParams {

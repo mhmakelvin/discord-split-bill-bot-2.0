@@ -63,7 +63,7 @@ export const transactions = pgTable("transactions", {
   serverId: varchar("server_id", { length: 256 }).notNull(),
   channelId: varchar("channel_id", { length: 256 }).notNull(),
   messageId: varchar("message_id", { length: 256 }).notNull(),
-  createAt: timestamp("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const transactionPayees = pgTable(
