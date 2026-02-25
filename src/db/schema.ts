@@ -25,10 +25,10 @@ export const users = pgTable(
   "users",
   {
     id: serial("id").primaryKey(),
-    name: varchar({ length: 256 }).notNull(),
-    serverId: varchar({ length: 256 }).notNull(),
-    userId: varchar({ length: 256 }).notNull(),
-    isActive: boolean().notNull().default(true),
+    name: varchar("name", { length: 256 }).notNull(),
+    serverId: varchar("server_id", { length: 256 }).notNull(),
+    userId: varchar("user_id", { length: 256 }).notNull(),
+    isActive: boolean("is_active").notNull().default(true),
   },
   (table) => ({
     serverUserIdx: index("server_user_idx").on(table.serverId, table.userId),
@@ -36,43 +36,43 @@ export const users = pgTable(
 );
 
 export const userBalances = pgTable(
-  "userBalances",
+  "user_balances",
   {
     id: serial("id").primaryKey(),
-    userId: integer()
+    userId: integer("user_id")
       .notNull()
       .references(() => users.id),
-    balance: integer().notNull().default(0),
-    currency: currency().notNull(),
+    balance: integer("balance").notNull().default(0),
+    currency: currency("currency").notNull(),
   },
   (table) => [unique().on(table.userId, table.currency)],
 );
 
 export const transactions = pgTable("transactions", {
   id: serial("id").primaryKey(),
-  description: varchar({ length: 256 }).notNull(),
-  authorUserId: integer()
+  description: varchar("description", { length: 256 }).notNull(),
+  authorUserId: integer("author_user_id")
     .notNull()
     .references(() => users.id),
-  payerUserId: integer()
+  payerUserId: integer("payer_user_id")
     .notNull()
     .references(() => users.id),
-  status: transactionStatus().notNull().default("pending"),
-  amount: integer().notNull(),
-  currency: currency().notNull(),
-  serverId: varchar({ length: 256 }).notNull(),
-  channelId: varchar({ length: 256 }).notNull(),
-  messageId: varchar({ length: 256 }).notNull(),
-  createAt: timestamp().notNull().defaultNow(),
+  status: transactionStatus("status").notNull().default("pending"),
+  amount: integer("amount").notNull(),
+  currency: currency("currency").notNull(),
+  serverId: varchar("server_id", { length: 256 }).notNull(),
+  channelId: varchar("channel_id", { length: 256 }).notNull(),
+  messageId: varchar("message_id", { length: 256 }).notNull(),
+  createAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const transactionPayees = pgTable(
-  "transactionPayees",
+  "transaction_payees",
   {
-    transactionId: integer()
+    transactionId: integer("transaction_id")
       .notNull()
       .references(() => transactions.id),
-    payeeUserId: integer()
+    payeeUserId: integer("payee_user_id")
       .notNull()
       .references(() => users.id),
   },
